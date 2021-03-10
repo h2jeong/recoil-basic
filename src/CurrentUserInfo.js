@@ -1,41 +1,33 @@
-import React from 'react'
-import { atom, selector, useRecoilValue } from 'recoil'
-
-const currentUserIDState = atom({
-    key: 'CurrentUserID',
-    default: 1
-})
-
-// const tableOfUsers = atom({
-//     key: 'TableOfUsers',
-//     default: {}
-// })
-
-// const currentUserNameState = selector({
-//     key: 'CurrentUserName',
-//     get: ({get}) => {
-//         return tableOfUsers[get(currentUserIDState)].name;
-//     }
-// })
-
-const currentUserNameQuery = selector({
-    key: 'CurrentUserName',
-    get: async({get}) => {
-        const response = await myDBQuery({
-            userId: get(currentUserIDState)
-        })
-        if (response.error) throw response.error;
-        return response.name;
-    }
-})
+import React from "react";
+import { useRecoilCallback, useRecoilValue } from "recoil";
+import {
+  currentUserIDState,
+  currentUserInfoQuery,
+  friendsInfoQuery,
+  userInfoQuery,
+} from "./atoms";
 
 function CurrentUserInfo() {
-    const userName = useRecoilValue(currentUserNameQuery);
-    return (
-        <div>
-            {userName}
-        </div>
-    )
+  const currentUser = useRecoilValue(currentUserInfoQuery);
+  const friends = useRecoilValue(friendsInfoQuery);
+  // const setCurrentUserID = useSetRecoilState(currentUserIDState);
+  const changeUser = useRecoilCallback(({ snapshot, set }) => (userID) => {
+    snapshot.getLoadable(userInfoQuery(userID)); // pre-fetch user info
+    set(currentUserIDState, userID);
+  });
+
+  return (
+    <div>
+      <h1>{currentUser.name}</h1>
+      <ul>
+        {friends.map((friend) => (
+          <li key={friend.id} onClick={() => changeUser(friend.id)}>
+            {friend.name}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 }
 
-export default CurrentUserInfo
+export default CurrentUserInfo;

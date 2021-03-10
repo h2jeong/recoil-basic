@@ -1,7 +1,9 @@
 import React from "react";
 import { RecoilRoot } from "recoil";
-import CurrentUserInfo from "./CurrentUserInfo";
+// import CurrentUserInfo from "./CurrentUserInfo";
+import CurrentUserInfo2 from "./CurrentUserInfo2";
 import { ErrorBoundary } from "./ErrorBoundary";
+// import UserInfo from "./UserInfo";
 // import TodoList from './TodoList';
 
 function App() {
@@ -9,7 +11,7 @@ function App() {
     <RecoilRoot>
       <ErrorBoundary>
         <React.Suspense fallback={<div>Loading...</div>}>
-          <CurrentUserInfo />
+          <CurrentUserInfo2 />
         </React.Suspense>
       </ErrorBoundary>
     </RecoilRoot>
